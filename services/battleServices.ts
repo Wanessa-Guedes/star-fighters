@@ -1,4 +1,3 @@
-//import db from "./../config/db.js";
 import { battleRepository } from "../repositories/battleRepository.js";
 
 async function insertBattleInfo(firstUser: string, secondUser: string, firstUserData, secondUserData) {
