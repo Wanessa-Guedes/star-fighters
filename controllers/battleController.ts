@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import axios from "axios";
+import axios, { AxiosPromise } from "axios";
 
 import db from "./../config/db.js";
 
 export async function postBattle(req: Request, res: Response){
-    const {firstUser, secondUser}: {firstUser: string, secondUser: string} = req.body
+    const {firstUser, secondUser}: {firstUser: string, secondUser: string} = req.body;
 
     try {
         const firstUserData = await axios.get(`https://api.github.com/users/${firstUser}/repos`);

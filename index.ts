@@ -2,14 +2,12 @@ import express from "express";
 import "express-async-errors";
 import dotenv from "dotenv";
 dotenv.config();
-import { postBattle } from "./controllers/battleController.js"; 
-import { getRanking } from "./controllers/rankingController.js"; 
+import router from "./routes/index.js";
 
 const app = express();
 app.use(express.json());
 
-app.post("/battle", postBattle) 
-app.get("/ranking", getRanking) 
+app.use(router) 
 
 const PORT = +process.env.PORT || 5000;
 
