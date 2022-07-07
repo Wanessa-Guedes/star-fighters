@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import axios, { AxiosPromise } from "axios";
 
 import db from "./../config/db.js";
+import { battleRepository } from "../repositories/battleRepository.js";
 
 export async function postBattle(req: Request, res: Response){
     const {firstUser, secondUser}: {firstUser: string, secondUser: string} = req.body;
@@ -32,12 +33,8 @@ export async function postBattle(req: Request, res: Response){
                 "loser": secondUser,
                 "draw": false
             } 
-            
-            await db.query(`INSERT INTO fighters (username, wins, losses, draws) VALUES ($1, $2, $3, $4)`,
-            [firstUser, 1, 0, 0])
-
-            await db.query(`INSERT INTO fighters (username, wins, losses, draws) VALUES ($1, $2, $3, $4)`,
-            [secondUser, 0, 1, 0])
+            await battleRepository.insertBattle(firstUser, 1, 0, 0)
+            await battleRepository.insertBattle(secondUser, 0, 1, 0)
 
             return res.send(finalDuel).status(200);
         } else if (countStarsOne < countStarsTwo) {
@@ -46,22 +43,13 @@ export async function postBattle(req: Request, res: Response){
                 "loser": firstUser,
                 "draw": false
             } 
-            
-            await db.query(`INSERT INTO fighters (username, wins, losses, draws) VALUES ($1, $2, $3, $4)`,
-            [secondUser, 1, 0, 0])
-
-            await db.query(`INSERT INTO fighters (username, wins, losses, draws) VALUES ($1, $2, $3, $4)`,
-            [firstUser, 0, 1, 0])
+            await battleRepository.insertBattle(secondUser, 1, 0, 0)
+            await battleRepository.insertBattle(firstUser, 0, 1, 0)
 
             return res.send(finalDuel).status(200);
         } else {
-
-            await db.query(`INSERT INTO fighters (username, wins, losses, draws) VALUES ($1, $2, $3, $4)`,
-            [secondUser, 0, 0, 1])
-
-            await db.query(`INSERT INTO fighters (username, wins, losses, draws) VALUES ($1, $2, $3, $4)`,
-            [firstUser, 0, 0, 1])
-
+            await battleRepository.insertBattle(firstUser, 0, 0, 1)
+            await battleRepository.insertBattle(secondUser, 0, 0, 1)
             res.send(finalDuel).status(200);
         }
         
