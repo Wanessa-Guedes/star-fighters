@@ -1,20 +1,9 @@
-import { Request, Response } from "express";
-import axios, { AxiosPromise } from "axios";
-
-import db from "./../config/db.js";
+//import db from "./../config/db.js";
 import { battleRepository } from "../repositories/battleRepository.js";
-import { battleServices } from "../services/battleServices.js";
 
-export async function postBattle(req: Request, res: Response){
-    const {firstUser, secondUser}: {firstUser: string, secondUser: string} = req.body;
+async function insertBattleInfo(firstUser: string, secondUser: string, firstUserData, secondUserData) {
 
-    try {
-        const firstUserData = await axios.get(`https://api.github.com/users/${firstUser}/repos`);
-        const secondUserData = await axios.get(`https://api.github.com/users/${secondUser}/repos`);
-
-        let battleInfo = await battleServices.insertBattleInfo(firstUser, secondUser, firstUserData, secondUserData)
-        res.send(battleInfo).status(200)
-        /* const userOneData = firstUserData.data?.filter((stars: any) => stars.stargazers_count !== 0);
+        const userOneData = firstUserData.data?.filter((stars: any) => stars.stargazers_count !== 0);
         const userTwoData = secondUserData.data?.filter((stars: any) => stars.stargazers_count !== 0);
         let countStarsOne: number = 0;
         let countStarsTwo: number = 0;
@@ -40,7 +29,8 @@ export async function postBattle(req: Request, res: Response){
             await battleRepository.insertBattle(firstUser, 1, 0, 0)
             await battleRepository.insertBattle(secondUser, 0, 1, 0)
 
-            return res.send(finalDuel).status(200);
+            return finalDuel;
+
         } else if (countStarsOne < countStarsTwo) {
             finalDuel = {
                 "winner": secondUser,
@@ -50,15 +40,14 @@ export async function postBattle(req: Request, res: Response){
             await battleRepository.insertBattle(secondUser, 1, 0, 0)
             await battleRepository.insertBattle(firstUser, 0, 1, 0)
 
-            return res.send(finalDuel).status(200);
+            return finalDuel;
         } else {
             await battleRepository.insertBattle(firstUser, 0, 0, 1)
             await battleRepository.insertBattle(secondUser, 0, 0, 1)
-            res.send(finalDuel).status(200);
-        } */
-        
-    } catch (error) {
-        console.log(error);
-        res.status(500).send(error);
-    }
+            return finalDuel;
+        }
+}
+
+export const battleServices = {
+    insertBattleInfo
 } 
