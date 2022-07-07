@@ -1,0 +1,5 @@
+database-starfighters/
+
+/node_modules
+
+.env
